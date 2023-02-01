@@ -3,7 +3,7 @@ A game in which you are resolving cilcular maze.
 Instead using game engine, i used Kotlin with JetpackCompose. 
 
 <p align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.voidsamurai.lumbze">  
+  <a href="https://play.google.com/store/apps/details?id=com.voidsamuraj.lumbze&hl=pl&gl=US">  
     <img src="https://user-images.githubusercontent.com/49106260/157001205-8efc5d81-936b-452e-9847-3191c7dd7794.png"  width="300"/>&nbsp;&nbsp;
   </a>
   <br/>
