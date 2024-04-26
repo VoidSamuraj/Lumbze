@@ -40,7 +40,6 @@ class Maze(val doOnComplete:()->Unit){
     private lateinit var endpoint:Pair<Int,Int>
     private var _allCells:Int=0
     val allCells get() = _allCells
-    @Suppress("UNCHECKED_CAST")
     /**
      * working path
      */
@@ -75,10 +74,14 @@ class Maze(val doOnComplete:()->Unit){
     private var mazeArray:ArrayList<ArrayList<Triple<CellState,List<CellDirections>,List<CellDirections>>>> = arrayListOf()
 
     //first need to increment
+    /**
+     * Function to get coordinates which will show path to resolve maze
+     */
     @Suppress("UNCHECKED_CAST")
     fun getPathToWin():Stack<Pair<Int,Int>>  =pathToWin.clone() as Stack<Pair<Int,Int>>
     /**
-     * @return first is height margin relative
+     * Function to get relative margin of ball and currentRotation.
+     * @return Pair, first is height margin relative
      *          second is angle of rotation only current rotation
      *         !!!Clears Rotation !!!
      */
@@ -103,6 +106,10 @@ class Maze(val doOnComplete:()->Unit){
             ballPos.second
         )
     }
+
+    /**
+     * Function to update maze and maze settings
+     */
     fun postData(cellSize:State<Int>, canvasSideSize:Int, updateCellSize:(Int)->Unit, screenWidth:Int, mazeViewModel: MazeViewModel){
         this.updateCellSize=updateCellSize
         this.cellSize=cellSize
@@ -112,6 +119,10 @@ class Maze(val doOnComplete:()->Unit){
         // ended.value=false
     }
 
+    /**
+     * Function to create new maze, draw it and return bitmap.
+     * @return bitmap of maze
+     */
     fun getMaze():Bitmap {
 
         this.canvasSide.let { side->
@@ -124,6 +135,12 @@ class Maze(val doOnComplete:()->Unit){
             return bitmap
         }
     }
+
+    /**
+     * Function to get drawable of helper path. It contains few next moves to resolve maze.
+     * @param stack - Stack of positions. it is logical representation of maze.
+     * @return Bitmap of hepler's path.
+     */
     private fun getPathDrawable(stack: Stack<Pair<Int, Int>>):Bitmap {
         val pathBitmap = Bitmap.createBitmap(drawableWidth, drawableWidth, Bitmap.Config.ARGB_8888)
         val pathCanvas  = Canvas(pathBitmap)
@@ -133,6 +150,13 @@ class Maze(val doOnComplete:()->Unit){
         pathBitmap.prepareToDraw()
         return pathBitmap
     }
+
+    /**
+     * Function to get bitmap of specified ball. To specify type need to call setBallStyle from viewModel [MazeViewModel.setBallStyle]
+     * @param res Resources of application
+     * @return bitmap of ball
+     * @see MazeViewModel.setBallStyle
+     */
     fun getBall(res:Resources):Bitmap{
         val mBitmap= BitmapFactory.decodeResource(res,mazeViewModel.getBallStyle())
         return Bitmap.createScaledBitmap(mBitmap, cellSize.value, cellSize.value, false)
@@ -141,13 +165,16 @@ class Maze(val doOnComplete:()->Unit){
     }
 
     /**
-     * moves and updates help path
+     * Moves in maze and updates help path
      * */
     fun moveBall(direction:CellDirections){
         //add 1 because center is -1
         //last pos is updated every move
         var lastPos:Pair<Int,Int> = Pair(ballPos.first+1,ballPos.second)
 
+        /**
+         * Function to update helper's path. It removes parts of path if moves in good direction.
+         */
         fun updateHelp(){
             // fun onEnd() {
             val ballPosInt = ballPos.copy()
@@ -399,24 +426,32 @@ class Maze(val doOnComplete:()->Unit){
 
     }
 
+    /**
+     * Function to calculate width and number of cells in row
+     * @param row - number of row in maze
+     * @return Pair(circumference of circle, number of cells)
+     */
     fun calculateWidthAndAmount(row:Int):Pair<Double,Int>{
-        var ret:Double=cellSize.value.toDouble()
         val smallLength=2*PI*cellSize.value
-        var cellsAmount:Int=(smallLength/ret).toInt()
-        ret=smallLength/cellsAmount
-        for (i in 1 until row){
 
-            val bigRadius=cellSize.value*(i+1)
-            val bigLength=2*PI*bigRadius
-            val splitedCells=bigLength/cellsAmount
-            ret=splitedCells
-            if(splitedCells/2>=cellSize.value)
-                ret/=2
-            cellsAmount=(bigLength/ret).toInt()
-        }
+         var ret:Double=cellSize.value.toDouble()
+         var cellsAmount:Int=(smallLength/ret).toInt()
+         ret=smallLength/cellsAmount
+         for (i in 1 until row){
+             val bigRadius=cellSize.value*(i+1)
+             val bigLength=2*PI*bigRadius
+             val splitedCells=bigLength/cellsAmount
+             ret=splitedCells
+             if(splitedCells/2>=cellSize.value)
+                 ret/=2
+             cellsAmount=(bigLength/ret).toInt()
+         }
         return Pair(ret,cellsAmount)
     }
 
+    /**
+     * Function to create maze
+     */
     fun createMaze(rowsAmount:Int){
 
         pathToWin.clear()
@@ -656,6 +691,9 @@ class Maze(val doOnComplete:()->Unit){
 
     }
 
+    /**
+     * Function to draw visual representation of maze.
+     */
     private fun displayMaze(){
 
         val trunkRadius=(rows+2)*cellSize.value.toFloat()
@@ -675,6 +713,13 @@ class Maze(val doOnComplete:()->Unit){
             }
         }
     }
+
+    /**
+     * Function to draw points of helper.
+     * @param canvas canvas on which will be maze drawn
+     * @param stack stack containing positions of points
+     * @param center center of view
+     */
     fun drawPoints(canvas:Canvas,stack: Stack<Pair<Int,Int>>,center:Pair<Int,Int>){
         val maxSize=14
         var size=maxSize//width/2
@@ -684,6 +729,14 @@ class Maze(val doOnComplete:()->Unit){
             --size
         }
     }
+    /**
+     * Function to draw single point of helper.
+     * @param canvas canvas on which will be maze drawn
+     * @param row position of point
+     * @param column position of point
+     * @param center center of view
+     * @param size size of point
+     */
     fun drawPoint(canvas:Canvas,row:Int,column:Int,center:Pair<Int,Int>,size:Float){
 
         val allRows=calculateWidthAndAmount(row).second
@@ -699,6 +752,14 @@ class Maze(val doOnComplete:()->Unit){
         }
         canvas.drawCircle(x1,y1,cellSize.value*size/3f,paint)
     }
+
+    /**
+     * Function to draw single cell (walls where is needed)
+     * @param row position of cell
+     * @param column position of cell
+     * @param directions possible directions of movement from this cell.
+     * @param width width of single cell
+     */
     private fun drawCell(row:Int, column:Int, directions:List<CellDirections>, width:Double){
 
         fun drawArc(radius:Int,startAngle:Float,endAngle:Float){
@@ -742,6 +803,9 @@ class Maze(val doOnComplete:()->Unit){
         }
     }
 
+    /**
+     * Function to create and update helper's drawable.
+     */
     fun updateHelpDrawable(){
 
         val items=7

@@ -45,7 +45,7 @@ class MyAuthentication(clientId:String, activity: MainActivity) {
                     // Your server's client ID, not your Android client ID.
                     .setServerClientId(clientId)
                     // Only show accounts previously used to sign in.
-                    .setFilterByAuthorizedAccounts(true)
+                    .setFilterByAuthorizedAccounts(false)
                     .build())
             // Automatically sign in when exactly one credential is retrieved.
             //.setAutoSelectEnabled(true)
@@ -63,7 +63,6 @@ class MyAuthentication(clientId:String, activity: MainActivity) {
                         result.pendingIntent.intentSender, 2137,
                         null, 0, 0, 0, null)
                 } catch (e: IntentSender.SendIntentException) {
-
                     Log.builder().setContent( "Couldn't start One Tap UI ${e.localizedMessage}").build()
                 }
             }
@@ -91,7 +90,6 @@ class MyAuthentication(clientId:String, activity: MainActivity) {
                                         onSignSuccess()
                                     } else {
                                         // If sign in fails, display a message to the user.
-
                                         Log.builder().setContent( "signInWithCredential:failure ${task.exception}").build()
                                     }
                                 }

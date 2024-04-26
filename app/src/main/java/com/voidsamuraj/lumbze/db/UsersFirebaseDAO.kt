@@ -1,6 +1,7 @@
 package com.voidsamuraj.lumbze.db
 
 import androidx.annotation.Keep
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport
 import com.google.firebase.database.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,6 +15,8 @@ class UsersFirebaseDAO() {
     init {
         val db=FirebaseDatabase.getInstance()
         dbReference=db.reference
+
+        //update on change
         vel=object:ValueEventListener{
 
             @Suppress("UNCHECKED_CAST")
@@ -38,7 +41,7 @@ class UsersFirebaseDAO() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                CrashlyticsReport.Session.Event.Log.builder().setContent( "database connection error: ${error.message}, ${error.details}").build()
             }
         }
     }

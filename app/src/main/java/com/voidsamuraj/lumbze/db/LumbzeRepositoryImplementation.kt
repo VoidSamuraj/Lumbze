@@ -79,12 +79,13 @@ class LumbzeRepositoryImplementation(
     fun synchronizeDatabase(id: String){
         if(_firebaseDAO!=null)
             CoroutineScope(Dispatchers.IO).launch {
+                //temp user
                 val roomUser = getUserFromRoom("2137")
                 val firebaseUser = getUserFromFirebase(id)
                 if (roomUser != null) {
                     //compare users if not null
 
-                    roomUserDao.deleteUser("2137")
+                   // roomUserDao.deleteUser("2137")
 
                     var user =
                         if (firebaseUser != null)
