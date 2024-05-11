@@ -13,7 +13,8 @@ plugins {
 android {
 
     compileSdk 33
-
+    def localProps = new Properties()
+    localProps.load(new FileInputStream(rootProject.file("local.properties")))
     defaultConfig {
         applicationId "com.voidsamuraj.lumbze"
         minSdk 28
@@ -25,8 +26,8 @@ android {
             useSupportLibrary true
         }
 
-        versionCode 11
-        signingConfig signingConfigs.debug
+        versionCode 18
+        //  signingConfig signingConfigs.debug
 
         kapt{
             arguments{
@@ -34,14 +35,24 @@ android {
             }
         }
 
+        buildConfigField "String", "game_services_adds_id", "\"${localProps.getProperty("game_services_adds_id")}\""
+        buildConfigField "String", "firebase_auth_key", "\"${localProps.getProperty("firebase_auth_key")}\""
+
     }
 
     buildTypes {
         release {
+            buildConfigField "String", "game_services_add_reward_id", "\"${localProps.getProperty("relase_game_services_add_reward_id")}\""
+            buildConfigField "String", "game_services_add_identity_full_screen_id", "\"${localProps.getProperty("relase_game_services_add_reward_id")}\""
+
             minifyEnabled true
             shrinkResources true
-
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField "String", "game_services_add_reward_id", "\"${localProps.getProperty("debug_game_services_add_reward_id")}\""
+            buildConfigField "String", "game_services_add_identity_full_screen_id", "\"${localProps.getProperty("debug_game_services_add_reward_id")}\""
+
         }
     }
     compileOptions {

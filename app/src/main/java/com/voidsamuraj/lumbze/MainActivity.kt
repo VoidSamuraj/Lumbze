@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -36,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
 
 
 class MainActivity : ComponentActivity() {
@@ -46,13 +46,19 @@ class MainActivity : ComponentActivity() {
     lateinit var playbackAttributes: AudioAttributes
     var audioFocusChangeListener =
         OnAudioFocusChangeListener { focusChange ->
-            if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                mazeViewModel.musicPlayer.start()
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                mazeViewModel.musicPlayer.pause()
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                mazeViewModel.musicPlayer.release()
-            }
+            try {
+                when (focusChange) {
+                    AudioManager.AUDIOFOCUS_GAIN -> {
+                        mazeViewModel.musicPlayer.start()
+                    }
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                        mazeViewModel.musicPlayer.pause()
+                    }
+                    AudioManager.AUDIOFOCUS_LOSS -> {
+                        mazeViewModel.musicPlayer.release()
+                    }
+                }
+            }catch(_: IllegalStateException){ }
         }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -78,7 +84,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         super.onCreate(savedInstanceState)
-        auth=MyAuthentication(getString(R.string.firebase_auth_key),this)
+        auth=MyAuthentication(BuildConfig.firebase_auth_key,this)
         this.requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
 
@@ -89,8 +95,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             LumbzeTheme() {
 
-                initRewardAdd(stringResource(id = R.string.game_services_add_reward_id),LocalContext.current)
-                initLevelAdd(stringResource(id = R.string.game_services_add_identity_full_screen_id),LocalContext.current)
+                initRewardAdd(BuildConfig.game_services_add_reward_id,LocalContext.current)
+                initLevelAdd(BuildConfig.game_services_add_identity_full_screen_id,LocalContext.current)
 
                 width=with(LocalDensity.current){   LocalConfiguration.current.screenWidthDp.dp.toPx()}.toInt()
                 mazeViewModel.maze.apply {
@@ -122,10 +128,12 @@ class MainActivity : ComponentActivity() {
         mazeViewModel.setRepositoryAndSharedPreferences(application)
 
         mazeViewModel.setMusicOn(mazeViewModel.sharedPrefs?.getBoolean("is_music_on",true)?:true)
-        mazeViewModel.musicPlayer.apply {
-            isLooping=true
-            if(mazeViewModel.isMusicOn.value) start()
-        }
+        try {
+            mazeViewModel.musicPlayer.apply {
+                isLooping=true
+                if(mazeViewModel.isMusicOn.value) start()
+            }
+        }catch(_: IllegalStateException){ }
 
         mazeViewModel.isUserSignedIn.value=false
 
@@ -147,7 +155,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        mazeViewModel.musicPlayer.pause()
+        try {
+            mazeViewModel.musicPlayer.pause()
+        }catch(_: IllegalStateException){ }
     }
 
     override fun onDestroy() {

@@ -195,8 +195,10 @@ class Maze(val doOnComplete:()->Unit){
             }
             //if balPos is second time in list, that means we are moving back
             else if (lastPos != ballPosIntInc) {
-                moveOutPath.remove(lastPos)
-                helpPathStack.remove(lastPos)
+                if(moveOutPath.contains(lastPos))
+                    moveOutPath.remove(lastPos)
+                if(helpPathStack.contains(lastPos))
+                    helpPathStack.remove(lastPos)
             }
 
 

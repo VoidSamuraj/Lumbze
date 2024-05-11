@@ -36,6 +36,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.ads.*
 import com.voidsamuraj.lumbze.ui.theme.mazeFont
 import kotlinx.coroutines.*
+import java.lang.IllegalStateException
 import kotlin.math.abs
 
 enum class AddType{
@@ -176,17 +177,21 @@ fun DrawMaze(mazeViewModel: MazeViewModel, resources: Resources,navigateStats: (
 
             }
         val activity:MainActivity= LocalContext.current as MainActivity
-        val adId= stringResource(id = R.string.game_services_add_reward_id)
+        val adId= BuildConfig.game_services_add_reward_id
         if(mazeViewModel.mLevelAd==null&&mazeViewModel.isMusicOn.value)
-            mazeViewModel.musicPlayer.start()
+            try {
+                 mazeViewModel.musicPlayer.start()
+            }catch(_: IllegalStateException){ }
         Row( modifier=Modifier.align(Alignment.TopEnd) ){
             IconButton(
                 onClick = {
                     val isMusicOn=mazeViewModel.setMusicOn()
-                    if(isMusicOn)
-                        mazeViewModel.musicPlayer.start()
-                    else
-                        mazeViewModel.musicPlayer.pause()
+                    try {
+                        if(isMusicOn)
+                            mazeViewModel.musicPlayer.start()
+                        else
+                            mazeViewModel.musicPlayer.pause()
+                    }catch(_: IllegalStateException){ }
 
                 },
                 modifier = Modifier.padding(10.dp,20.dp),
@@ -204,7 +209,9 @@ fun DrawMaze(mazeViewModel: MazeViewModel, resources: Resources,navigateStats: (
             }
             IconButton(
                 onClick = {
-                    mazeViewModel.musicPlayer.pause()
+                    try {
+                        mazeViewModel.musicPlayer.pause()
+                    }catch(_: IllegalStateException){ }
 
                     playAdd(addId = adId, addType = AddType.REWARD, mazeViewModel = mazeViewModel, activity = activity){
                         mazeViewModel.maze.updateHelpDrawable()
@@ -380,9 +387,11 @@ fun DrawEndScreen(isScrollable: MutableState<Boolean>, mazeViewModel: MazeViewMo
                     Spacer(modifier = Modifier.height(30.dp))
 
                     val activity:MainActivity= LocalContext.current as MainActivity
-                    val adId= stringResource(id = R.string.game_services_add_identity_full_screen_id)
+                    val adId= BuildConfig.game_services_add_identity_full_screen_id
                     if(mazeViewModel.mRewardedAd==null&&mazeViewModel.isMusicOn.value)
-                        mazeViewModel.musicPlayer.start()
+                        try {
+                            mazeViewModel.musicPlayer.start()
+                        }catch(_: IllegalStateException){ }
 
                     DrawMenuButton(text = stringResource(id = R.string.play), modifier = Modifier.padding(10.dp), textColor = colorResource(
                         id = R.color.trunkText
@@ -462,7 +471,9 @@ fun playAdd(addId:String,addType: AddType,mazeViewModel: MazeViewModel,activity:
     when(addType){
         AddType.LEVEL->{
             if(canPlay) {
-                mazeViewModel.musicPlayer.pause()
+                try {
+                    mazeViewModel.musicPlayer.pause()
+                }catch(_: IllegalStateException){ }
                 if (mazeViewModel.mLevelAd != null) {
 
 

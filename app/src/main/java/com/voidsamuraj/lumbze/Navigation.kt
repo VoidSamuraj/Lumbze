@@ -59,7 +59,6 @@ fun Navigation(mazeViewModel:MazeViewModel, navController: NavHostController, wi
                 navigator = navController,
                 mazeViewModel = mazeViewModel,
                 loginCode = {
-
                     auth.login()
                 })
         }

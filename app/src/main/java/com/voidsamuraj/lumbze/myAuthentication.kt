@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import  com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.Event.Log
 
@@ -64,39 +65,46 @@ class MyAuthentication(clientId:String, activity: MainActivity) {
                         null, 0, 0, 0, null)
                 } catch (e: IntentSender.SendIntentException) {
                     Log.builder().setContent( "Couldn't start One Tap UI ${e.localizedMessage}").build()
+                    FirebaseCrashlytics.getInstance().log("Couldn't start One Tap UI ${e.localizedMessage}")
                 }
             }
             .addOnFailureListener(mActivity as Activity) { e ->
                 // No saved credentials found. Launch the One Tap sign-up flow, or
                 // do nothing and continue presenting the signed-out UI.
                 Log.builder().setContent( "ONE_CLICK_FAILURE ${e.localizedMessage}").build()
+                FirebaseCrashlytics.getInstance().log("ONE_CLICK_FAILURE ${e.localizedMessage}")
+
             }
     }
     fun onFirebaseResult(requestCode:Int,data:Intent?,onSignSuccess:()->Unit){
+        FirebaseCrashlytics.getInstance().log("onResult $requestCode")
         when (requestCode) {
             2137 -> {
                 try {
                     val credential = oneTapClient!!.getSignInCredentialFromIntent(data)
                     val idToken = credential.googleIdToken
-                    when {
-                        idToken != null -> {
-                            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-                            auth.signInWithCredential(firebaseCredential)
-                                .addOnCompleteListener(mActivity as Activity) { task ->
-                                    if (task.isSuccessful) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        currentUser=auth.currentUser
+                    if(idToken != null) {
+                        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+                        auth.signInWithCredential(firebaseCredential)
+                            .addOnCompleteListener(mActivity as Activity) { task ->
+                                if (task.isSuccessful) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    currentUser=auth.currentUser
 
-                                        onSignSuccess()
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.builder().setContent( "signInWithCredential:failure ${task.exception}").build()
-                                    }
+                                    onSignSuccess()
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.builder().setContent( "signInWithCredential:failure ${task.exception}").build()
+                                    FirebaseCrashlytics.getInstance().log("signInWithCredential:failure ${task.exception}")
                                 }
-                        }
+                            }
+
+                    }else{
+                        FirebaseCrashlytics.getInstance().log("NULL id_TOKEN")
                     }
                 } catch (e: ApiException) {
                     Log.builder().setContent("ON_ACTIVITY_RESULT ${e.localizedMessage}").build()
+                    FirebaseCrashlytics.getInstance().log("ON_ACTIVITY_RESULT ${e.localizedMessage}")
                 }
             }
         }
