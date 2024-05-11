@@ -1,8 +1,27 @@
 # Lumbze
+![Static Badge](https://img.shields.io/badge/jetpack_compose-1.3.0-green)
+![Static Badge](https://img.shields.io/badge/compileSdk-33-blue)
+![Static Badge](https://img.shields.io/badge/minSdkVersion-28-blue)
+![Static Badge](https://img.shields.io/badge/targetSdkVersion-33-blue)
+
+![core-ktx](https://img.shields.io/badge/androidx.core:core--ktx-1.9.0-yellow)
+![compose-ui](https://img.shields.io/badge/androidx.compose.ui:ui-1.3.2-orange)
+![compose-material](https://img.shields.io/badge/androidx.compose.material:material-1.3.1-orange)
+![lifecycle-runtime-ktx](https://img.shields.io/badge/androidx.lifecycle:lifecycle--runtime--ktx-2.5.1-blue)
+![firebase-database-ktx](https://img.shields.io/badge/com.google.firebase:firebase--database--ktx-20.1.0-red)
+![coil-compose](https://img.shields.io/badge/io.coil--kt:coil--compose-2.2.2-purple)
+![play-services-ads](https://img.shields.io/badge/com.google.android.gms:play--services--ads-21.4.0-red)
+
+## Description
 A game in which you are resolving cilcular maze. 
 Instead using game engine, i used Kotlin with JetpackCompose. 
-
-<p align="center">
+When writing this project, I used :
+- JetpackCompose
+- MVVM
+- Room Database
+- Firebase
+## Usage
+<p align="left">
   <a href="https://play.google.com/store/apps/details?id=com.voidsamuraj.lumbze">  
     <img src="https://user-images.githubusercontent.com/49106260/157001205-8efc5d81-936b-452e-9847-3191c7dd7794.png"  width="300"/>&nbsp;&nbsp;
   </a>
