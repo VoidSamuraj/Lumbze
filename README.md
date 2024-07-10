@@ -1,4 +1,15 @@
-# Lumbze
+<div align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.voidsamuraj.lumbze" target="_blank">
+   <img src="https://github.com/VoidSamuraj/Lumbze/assets/49106260/c8e51dca-1347-4d60-a9f9-a9e05729c69e" width="80" height="80">
+  </a>
+
+  <h1 align="center">Lumbze</h1>
+
+  <p align="center">
+    maze-solving game
+  </p>
+</div>
+
 ![Static Badge](https://img.shields.io/badge/jetpack_compose-1.3.0-green)
 ![Static Badge](https://img.shields.io/badge/compileSdk-33-blue)
 ![Static Badge](https://img.shields.io/badge/minSdkVersion-28-blue)
