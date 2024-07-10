@@ -13,13 +13,31 @@
 ![play-services-ads](https://img.shields.io/badge/com.google.android.gms:play--services--ads-21.4.0-red)
 
 ## Description
-A game in which you are resolving cilcular maze. 
-Instead using game engine, i used Kotlin with JetpackCompose. 
-When writing this project, I used :
-- JetpackCompose
-- MVVM
-- Room Database
-- Firebase
+  Lumbze is a simple yet engaging game where you solve circular mazes, earn points, unlock new ball styles, and compete to be the best on the podium.
+
+  The app is developed using Jetpack Compose and ViewModel, with authentication provided by Google. Data storage is handled using Firebase and RoomDB. Additionally, the app features music playback managed by AudioManager and MediaPlayer.
+
+  This project marks a significant step forward for me in building clean code, with improvements in app architecture and development speed thanks to the use of Room Database and ViewModel.
+
+## Technologies
+* Jetpack Compose: For building responsive and dynamic UI.
+* MVVM: Model-View-ViewModel architecture for better separation of concerns.
+* Room Database: For efficient local data storage.
+* Firebase: For real-time database and authentication.
+* Google Authentication: For easy and secure user login.
+* AudioManager and MediaPlayer: For background music and sound effects.
+
+## Features
+* Adjustable Difficulty: Change the number of rows to increase maze complexity.
+* Scalable Mazes: Zoom in and out to adjust the maze's visibility.
+* Google Login: Easily log in with your Google account.
+* Random Maze Generation: Enjoy a new challenge every time with randomly generated mazes.
+* Dynamic Scoring: Earn points based on the number of rows in the maze.
+* Customization: Visit the shop to unlock and change ball styles.
+* Music Control: Turn the background music on or off as you prefer.
+* Hints Available: Get help if the maze is too difficult to solve.
+
+  
 ## Usage
 <p align="left">
   <a href="https://play.google.com/store/apps/details?id=com.voidsamuraj.lumbze">  
@@ -33,6 +51,9 @@ When writing this project, I used :
   <img src="https://user-images.githubusercontent.com/49106260/216026996-69a706cb-02be-48e1-9f0e-9e348ca650ca.png"  width="300"/>
   <img src="https://user-images.githubusercontent.com/49106260/216027018-e61ed39e-14b5-45b1-8dcd-dc6eb2272c99.png"  width="300"/>
   <img src="https://user-images.githubusercontent.com/49106260/216027127-f0be76b0-ab33-4cc2-a00b-0382b4a6d16c.png"  width="300"/>
-
-
 </p>
+
+## License
+
+Distributed under the GNU License. See <a href="https://github.com/VoidSamuraj/Lumbze/blob/master/LICENSE">`LICENSE`</a> for more information.
+
